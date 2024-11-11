@@ -48,52 +48,6 @@ public:
         delete[] number;
         number = nullptr;
     }
-    
-    //// Не мои операторы
-    ////Оператор строго меньше<
-    //bool operator < (const LongNumber& other) const {
-    //    if (size < other.size) return true;
-    //    if (size > other.size) return false;
-    //    for (int i = size; i > 0; i--) {
-    //        if (number[i - 1] < other.number[i - 1])
-    //            return true;
-    //        if (number[i - 1] > other.number[i - 1])
-    //            return false;
-    //    }
-
-    //    return false;
-    //}
-
-    ////Оператор строго больше > 
-    //bool operator > (const LongNumber& other) const {
-    //    return other < *this;
-    //}
-
-    ////Оператор меньше либо равно <= 
-    //bool operator <= (const LongNumber& other) const {
-    //    return !(*this > other);
-    //}
-
-    ////Оператор больше либо равно >= 
-    //bool operator >= (const LongNumber& other) const {
-    //    return !(*this < other);
-    //}
-
-    ////Оператор равно == 
-    //bool operator == (const LongNumber& other) const {
-    //    if (size != other.size) return false;
-    //    for (int i = 0; i < size; i++)
-    //    {
-    //        if (number[i] != other.number[i]) return false;
-    //    }
-
-    //    return true;
-    //}
-
-    ////Оператор не равно != 
-    //bool operator != (const LongNumber& other) const {
-    //    return !(*this == other);
-    //}
 
     LongNumber& operator = (const LongNumber& other)
     {
@@ -433,31 +387,6 @@ public:
         }
     }
 
-
-    //void fromNumberToString(int n) {
-    //    char str[12]; // Массив, достаточный для хранения int с возможным минусом и '\0'
-    //    int index = 0;
-
-    //    // Получение цифр в обратном порядке
-    //    int start = index;
-    //    do {
-    //        str[index++] = (n % 10) + '0';
-    //        n /= 10;
-    //    } while (n != 0);
-
-    //    // Переворот строки для правильного порядка
-    //    for (int i = start, j = index - 1; i < j; i++, j--) {
-    //        char temp = str[i];
-    //        str[i] = str[j];
-    //        str[j] = temp;
-    //    }
-
-    //    str[index] = '\0'; // Завершение строки символом конца строки
-
-    //    // Вызов функции fromStringToNumber
-    //    fromStringToNumber(str);
-    //}
-
     char* toString() const
     {
         char* str = new char[size + 1];
@@ -475,38 +404,23 @@ public:
         return b;
     }
 
-    //// На 1 поднимает вверх
-    //LongNumber sqrt1(LongNumber n)
-    //{
-    //    LongNumber i("1");
-    //    while (i <= n)
-    //    {
-    //        if ((i * i) >= n)
-    //        {
-    //            return i;
-    //        }
-    //        else
-    //        {
-    //            i = i + LongNumber("1");
-    //        }
-    //    }
-    //}
-
     // Оставить это, работает отлично, но теперь алгоритм не работает (или работает?)
     LongNumber sqrt1(LongNumber n)
     {
         if (n == LongNumber("0"))
             return LongNumber("0");
 
-        LongNumber low("1");
+        LongNumber low = 1;
         LongNumber high = n;
         LongNumber mid;
         LongNumber midSquared;
+        LongNumber num2 = 2;
+        LongNumber num1 = 1;
 
         while (low <= high)
         {
             // Вычисляем середину
-            mid = (low + high) / LongNumber("2");
+            mid = (low + high) / num2;
 
             // mid^2
             midSquared = mid * mid;
@@ -514,9 +428,9 @@ public:
             if (midSquared == n)
                 return mid;  // нашли точный корень
             else if (midSquared < n)
-                low = mid + LongNumber("1");  // ищем в правой половине
+                low = mid + num1;  // ищем в правой половине
             else
-                high = mid - LongNumber("1");  // ищем в левой половине
+                high = mid - num1;  // ищем в левой половине
         }
 
         return high;  // В конце high будет максимальным числом, чьи квадрат меньше или равен n
@@ -540,7 +454,6 @@ public:
         }
     }
 
-
     void fermatFactorization(LongNumber& a) {
 
         if (a.endelim() == 0) {
@@ -555,29 +468,29 @@ public:
             return;
         }
 
-        LongNumber y("0");
+        LongNumber y = 0;
         LongNumber R = x * x - y * y;
-        LongNumber Rx = x * LongNumber("2") + LongNumber("1");
-        LongNumber Ry = LongNumber("1");
+        LongNumber num1 = 1;
+        LongNumber num2 = 2;
+        LongNumber Rx = x * num2 + num1;
+        LongNumber Ry = num1;
 
         while (R != a) {
             if (R > a) {
-                // Если R(x, y) > a, увеличиваем y на 1 и пересчитываем R и R_y
-                y = y + LongNumber("1");
+                // Если R(x, y) > a, увеличиваем y на 1 и пересчитываем R и R_y    
                 R = R - Ry;
-                Ry = Ry + LongNumber("2");  // Обновляем R_y
+                Ry = Ry + num2;  // Обновляем R_y
             }
             else {
                 // Если R(x, y) < a, увеличиваем x на 1 и пересчитываем R и R_x
-                x = x + LongNumber("1");
                 R = R + Rx;
-                Rx = Rx + LongNumber("2");  // Обновляем R_x
+                Rx = Rx + num2;  // Обновляем R_x
             }
         }
 
         // Когда R(x, y) == a, находим делители (x - y) и (x + y)
-        LongNumber factor1 = x - y;
-        LongNumber factor2 = x + y;
+        LongNumber factor1 = (Rx-Ry)/ num2;
+        LongNumber factor2 = ((Rx +Ry)/num2)-num1;
         cout << "Факторы: " << factor1.toString() << " * " << factor2.toString() << endl;
     }
 
@@ -593,7 +506,7 @@ int main()
     setlocale(LC_ALL, "Russian");
 
     LongNumber result;
-    LongNumber a = "111 111 111 111 111 111 113";
+    LongNumber a = "99952435243245456786789";
     auto start = high_resolution_clock::now();
     result.fermatFactorization(a);
     auto end = high_resolution_clock::now();
