@@ -48,7 +48,7 @@ public:
         delete[] number;
         number = nullptr;
     }
-    
+
     //// Не мои операторы
     ////Оператор строго меньше<
     //bool operator < (const LongNumber& other) const {
@@ -557,27 +557,27 @@ public:
 
         LongNumber y("0");
         LongNumber R = x * x - y * y;
-        LongNumber Rx = x * LongNumber("2") + LongNumber("1");
-        LongNumber Ry = LongNumber("1");
+        LongNumber num1 = 1;
+        LongNumber num2 = 2;
+        LongNumber Rx = x * num2 + num1;
+        LongNumber Ry = num1;
 
         while (R != a) {
             if (R > a) {
-                // Если R(x, y) > a, увеличиваем y на 1 и пересчитываем R и R_y
-                y = y + LongNumber("1");
+                // Если R(x, y) > a, увеличиваем y на 1 и пересчитываем R и R_y    
                 R = R - Ry;
-                Ry = Ry + LongNumber("2");  // Обновляем R_y
+                Ry = Ry + num2;  // Обновляем R_y
             }
             else {
                 // Если R(x, y) < a, увеличиваем x на 1 и пересчитываем R и R_x
-                x = x + LongNumber("1");
                 R = R + Rx;
-                Rx = Rx + LongNumber("2");  // Обновляем R_x
+                Rx = Rx + num2;  // Обновляем R_x
             }
         }
 
         // Когда R(x, y) == a, находим делители (x - y) и (x + y)
-        LongNumber factor1 = x - y;
-        LongNumber factor2 = x + y;
+        LongNumber factor1 = (Rx-Ry)/2;
+        LongNumber factor2 = ((Rx +Ry)/2)-1;
         cout << "Факторы: " << factor1.toString() << " * " << factor2.toString() << endl;
     }
 
@@ -593,58 +593,58 @@ int main()
     setlocale(LC_ALL, "Russian");
 
     LongNumber result;
-    LongNumber a = "111 111 111 111 111 111 113";
+    /*LongNumber a = "99952435243245456786789";
     auto start = high_resolution_clock::now();
     result.fermatFactorization(a);
     auto end = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(end - start);
+    cout << "Время выполнения: " << duration.count() << " миллисекунд" << endl;*/
+
+    ifstream file("Simple_numbers.txt");
+    if (!file.is_open()) {
+        cerr << "Ошибка: не удалось открыть файл." << endl;
+        return 1;
+    }
+
+    LongNumber numbers[5];
+    char line[1024];  // Буфер для хранения строки из файла
+
+    for (size_t i = 0; i < 5 && file.getline(line, sizeof(line)); ++i) {
+        numbers[i] = LongNumber(line);
+    }
+    file.close();
+
+    cout << "Считанные числа:" << endl;
+    for (size_t i = 0; i < 5; ++i) {
+        numbers[i].print();
+    }
+
+    cout << endl;
+
+    for (size_t i = 0; i < 5; ++i) {
+        cout << "Факторизация числа " << i + 1 << ": ";
+        auto start = high_resolution_clock::now();
+
+        result.fermatFactorization(numbers[i]);
+
+        auto end = high_resolution_clock::now();
+        auto duration = duration_cast<milliseconds>(end - start);
+        cout << "Время выполнения: " << duration.count() << " миллисекунд" << endl;
+    }
+
+    LongNumber a;
+    a.generateRandomNumber(5);
+    cout << "Сгенерированное число: ";
+    a.print();
+
+    auto start = high_resolution_clock::now();
+    cout << "Факторизация числа: ";
+    a.fermatFactorization(a);
+
+    auto end = high_resolution_clock::now();
+
+    auto duration = duration_cast<milliseconds>(end - start);
     cout << "Время выполнения: " << duration.count() << " миллисекунд" << endl;
-
-    //ifstream file("Simple_numbers.txt");
-    //if (!file.is_open()) {
-    //    cerr << "Ошибка: не удалось открыть файл." << endl;
-    //    return 1;
-    //}
-
-    //LongNumber numbers[5];
-    //char line[1024];  // Буфер для хранения строки из файла
-
-    //for (size_t i = 0; i < 5 && file.getline(line, sizeof(line)); ++i) {
-    //    numbers[i] = LongNumber(line);
-    //}
-    //file.close();
-
-    //cout << "Считанные числа:" << endl;
-    //for (size_t i = 0; i < 5; ++i) {
-    //    numbers[i].print();
-    //}
-
-    //cout << endl;
-
-    //for (size_t i = 0; i < 5; ++i) {
-    //    cout << "Факторизация числа " << i + 1 << ": ";
-    //    auto start = high_resolution_clock::now();
-
-    //    result.fermatFactorization(numbers[i]);
-
-    //    auto end = high_resolution_clock::now();
-    //    auto duration = duration_cast<milliseconds>(end - start);
-    //    cout << "Время выполнения: " << duration.count() << " миллисекунд" << endl;
-    //}
-
-    //LongNumber a;
-    //a.generateRandomNumber(5);
-    //cout << "Сгенерированное число: ";
-    //a.print();
-
-    //auto start = high_resolution_clock::now();
-    //cout << "Факторизация числа: ";
-    //a.fermatFactorization(a);
-
-    //auto end = high_resolution_clock::now();
-
-    //auto duration = duration_cast<milliseconds>(end - start);
-    //cout << "Время выполнения: " << duration.count() << " миллисекунд" << endl;
 
 
     return 0;
